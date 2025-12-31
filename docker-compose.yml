@@ -1,0 +1,18 @@
+services:
+  database:
+    image: postgres
+    container_name: streamd_db
+    ports:
+      - 5431:5432
+    restart: always
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: streamd
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - 8080:8080

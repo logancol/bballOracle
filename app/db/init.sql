@@ -6,11 +6,12 @@ CREATE TABLE Player
 
 CREATE TABLE Games
 (
-    game_id INT PRIMARY KEY,
-    season INT
+    game_id INT PRIMARY KEY NOT NULL,
+    season INTEGER NOT NULL,
+    season_type TEXT NOT NU
 );
 
-pbp_raw_events (
+CREATE TABLE pbp_raw_events (
   -- Identity
   game_id            BIGINT NOT NULL,
   event_num          INTEGER NOT NULL,        -- unique within game
