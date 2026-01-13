@@ -1,3 +1,3 @@
 # bballOracle
 
-AI powered NBA play-by-play analytics resource for fantasy sports enthusiasts.
+AI-powered Natural language sql querying tool for non-technical basketball enthusiasts to easily derive player-insights from raw play-by-play data. 
