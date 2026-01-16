@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from typing import Optional
 from app.core.config import settings
 from bcrypt import hashpw, gensalt, checkpw
+from app.models.user import UserCreate, UserPublic, UserInDB
 
 DB_URL = settings.DATABASE_URL
 
@@ -20,29 +21,40 @@ def init_db(conn: psycopg.connection):
             );
             """)
 
-async def get_user_by_email(conn: AsyncConnection, email: str) -> Optional[dict]:
+async def get_user_by_email(conn: AsyncConnection, email: str) -> Optional[UserInDB]:
     async with conn.cursor() as cur:
-        await cur.execute("SELECT password_hash, email, full_name FROM users WHERE email = %s", (email,))
+        await cur.execute(
+            "SELECT email, full_name, password_hash FROM users WHERE email = %s", 
+            (email,)
+        )
         row = await cur.fetchone()
-    if row:
-        return {"password_hash": row[0], "email": row[1], "full_name": row[2]}
-    return None
 
-async def create_user(conn: AsyncConnection, password: str, email: str, full_name: str = ""):
-    if not email:
-        raise HTTPException(status_code=400, detail="Email required")
-    password_hash = get_password_hash(password)
+    if not row:
+        return None
+    
+    user_dict = {
+        "email": row[0],
+        "full_name": row[1],
+        "password_hash": row[2]
+    }
+    return UserInDB.model_validate(user_dict)
+
+async def create_user(conn: AsyncConnection, user: UserCreate) -> UserPublic:
+    password_hash = get_password_hash(user.password)
     try:
         async with conn.transaction():
             async with conn.cursor() as cur:
                 await cur.execute(
-                    "INSERT INTO users (full_name, password_hash, email) VALUES (%s, %s, %s, %s)",
-                    (full_name, password_hash, email)
+                    "INSERT INTO users (full_name, password_hash, email) VALUES (%s, %s, %s)",
+                    (user.full_name, password_hash, user.email)
                 )
     except psycopg.errors.UniqueViolation as e:
         raise HTTPException(status_code=409, detail="Email already being used.")
     except psycopg.Error as e:
         raise HTTPException(status_code=500, detail="DB Error when creating user.") from e
-        
+    return UserPublic.model_validate(
+        {"email": user.email, "full_name": user.full_name}
+    )
+
 def get_password_hash(password: str):
     return hashpw(password.encode("utf-8"), gensalt()).decode("utf-8")

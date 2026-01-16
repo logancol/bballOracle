@@ -1,15 +1,12 @@
-from fastapi import FastAPI, HTTPException, Depends
 from openai import OpenAI
-from typing import Annotated
 from app.core.config import settings
 import logging
 import sys
 from contextlib import asynccontextmanager
-from fastapi.security import OAuth2PasswordRequestForm
-from StreamD.app.models.token import Token
 from app.db.db import get_async_pool, get_pool
 from app.api.questions import router as questions_router
 from app.api.auth import router as auth_router
+from fastapi import FastAPI
 
 # Global logging config for api
 logging.basicConfig(
@@ -22,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+
     OPENAI_API_KEY = settings.OPENAI_API_KEY
     if not OPENAI_API_KEY:
         raise RuntimeError("OPENAI_API_KEY is not set or not loaded")
