@@ -15,7 +15,7 @@ services:
       AUTH_R_PASSWORD: "${AUTH_R_PASSWORD:?set AUTH_R_PASSWORD}"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./app/db/init/init.sh:/docker-entrypoint-initdb.d/00-init-roles.sh:ro
+      - ./app/db/init.sh:/docker-entrypoint-initdb.d/00-init-roles.sh:ro
       - ./app/db/init.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./app/db/grants.sql:/docker-entrypoint-initdb.d/02-grants.sql:ro
 

@@ -13,7 +13,7 @@ router = APIRouter()
 log = logging.getLogger(__name__)
 
 @router.post("/question", response_model=AnswerBase)
-@limiter.limit("3/minute")
+@limiter.limit("10/minute")
 async def get_answer(question: QuestionBase, request: Request, conn: AsyncConnection = Depends(get_async_conn_ro), 
                      current_user: UserInDB = Depends(get_current_active_user)) -> AnswerBase:
     log.info(f"====== QUESTION ENDPOINT HIT BY {current_user.email}, QUESTION: {question} ======")
