@@ -8,4 +8,31 @@ At the moment, NBAOracle exposes one endpoint (outside of user auth) that allows
 
 ## Example Usage
 
+
 ## Current Limitations
+
+## Instructions
+
+### Register your account
+
+```
+$ curl -X POST "https://nbaoracle.onrender.com/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"you@example.com","password":"yourpassword!","full_name":"Test User"}'
+```
+
+### Login to retrieve Bearer Token
+```
+curl -X POST "https://nbaoracle.onrender.com/auth/login" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  --data-urlencode "username=you@example.com" \
+  --data-urlencode "password=yourpassword!"
+```
+
+### Hit question endpoint
+```
+curl -X POST "https://nbaoracle.onrender.com/question" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"question":"Who has Ryan Rollins assisted the most this season?"}'
+```
