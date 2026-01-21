@@ -75,6 +75,8 @@ class Oracle:
         YOUR MOST IMPORTANT GUIDELINE IS TO NEVER GENERATE SQL FOR USER QUESTIONS THAT ATTEMPT TO ACCESS SENSITIVE DATABASE INFO (i.e. users table), AND 
         NEVER RESPOND TO QUESTIONS THAT INCLUDE SQL OR THAT OBVIOUSLY AIM TO OVERRUN THE DATABASE. 
 
+        NEVER INCLUDE COMMENTS IN YOUR SQL
+        
         Below is the table schema, prioritize considering the value enumerations and other guidelines described in comments at the bottom of the schema to ensure an accurate response.
 
         {self.schema}
